@@ -1,0 +1,20 @@
+Javascript: dynamically: change content on a page directly from inside the browser weakly typed programming lang compiled at runtime
+request sent to server and sent back as html response
+user clicks button to submit a form and triggers new request to server and replies w new response new html
+
+Javascript makes webpage more reactive and skip the new response to just change already loaded page
+
+
+3. Instead of sending user to new link w html text can make a popup module
+just add a class to the link and defer to src
+change src to "#"
+add data-text="Enter text"
+overlay is shown by js instead of reloading a webpage
+
+script tags before end of body
+custom css in head
+
+
+
+true = 1
+false = 0
