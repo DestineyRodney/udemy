@@ -18,3 +18,8 @@ custom css in head
 
 true = 1
 false = 0
+
+Variable
+
+[let] keyword when introduced for first time
+[const] will never change
