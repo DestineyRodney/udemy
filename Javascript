@@ -23,3 +23,5 @@ Variable
 
 [let] keyword when introduced for first time
 [const] will never change
+
+With async , the file gets downloaded asynchronously and then executed as soon as it's downloaded. With defer , the file gets downloaded asynchronously, but executed only when the document parsing is completed. With defer , scripts will execute in the same order as they are called.
