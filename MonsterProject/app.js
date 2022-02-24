@@ -1,6 +1,7 @@
 const monsterHealthBar = document.getElementById('monster-health');
 const playerHealthBar = document.getElementById('player-health');
 const bonusLife = document.getElementById('bonus-life');
+const bonusLifeEl = document.getElementById('bonus-life');
 
 //Buttons
 const attackBtn = document.getElementById('attack-btn');
@@ -9,12 +10,21 @@ const healBtn = document.getElementById('heal-btn');
 const logBtn = document.getElementById('log-btn');
 
 const ATTACK_VALUE = 10; // uppercase bc const global value
-const MONSTER_ATTACK_VALUE = 21;
-const STRONG_ATTACK_VALUE = 20;
+const MONSTER_ATTACK_VALUE = 14;
+const STRONG_ATTACK_VALUE = 17;
 const HEAL_VALUE = 20;
-let maxLife = 100;
+// User input max life
+let enteredMaxLife = prompt('Enter max life value');
+let maxLife = enteredMaxLife;
+
+if (isNaN(enteredMaxLife) || enteredMaxLife <= 0){
+    enteredMaxLife = 100;
+}
+
 let currentMonsterHealth = maxLife;
-let currentPlayerhealth = maxLife;
+let currentPlayerHealth = maxLife;
+let hasBonusLife = true ;
+
 
 function adjustHealthBars(maxLife) {
     monsterHealthBar.max = maxLife;
@@ -30,6 +40,27 @@ function dealMonsterDamage (damage){
 
 adjustHealthBars(maxLife);
 
+function endRound (){
+    const initialPlayerHealth = currentPlayerHealth;
+    const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
+    currentPlayerHealth -= playerDamage;
+
+    if (currentPlayerHealth <= 0 && hasBonusLife){
+        hasBonusLife = false;
+        removeBonusLife();
+        currentPlayerHealth = initialPlayerHealth;
+        alert('you would be dead but bonus life saved you');
+        setPlayerHealth(initialPlayerHealth);
+    }
+    if(currentMonsterHealth <= 0 && currentPlayerHealth > 0){
+        alert('you win!');
+    } else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0){
+        alert('you lose');
+    } else if (currentPlayerHealth <= 0 && currentMonsterHealth <= 0){
+        alert('tie');
+    }
+}
+
 function attackMonster(attackType) {
     let maxDamage;
     if (attackType === 'ATTACK') {
@@ -40,22 +71,12 @@ function attackMonster(attackType) {
     const damage = dealMonsterDamage(maxDamage);
     const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
     currentMonsterHealth -= damage;
-    currentPlayerhealth -= playerDamage;
+    currentPlayerHealth -= playerDamage;
    endRound();
 }
-function endRound (){
-    const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
-    currentPlayerhealth -= playerDamage;
-    if(currentMonsterHealth <= 0 && currentPlayerhealth > 0){
-        alert('you win!');
-    } else if (currentPlayerhealth <= 0 && currentMonsterHealth > 0){
-        alert('you lose');
-    } else if (currentPlayerhealth <= 0 && currentMonsterHealth <= 0){
-        alert('tie');
-    }
-}
+
 function strongAttachHandler (){
-attackMonster('STRONG_ATTACK')
+    attackMonster('STRONG_ATTACK')
 }
 
 function attackHandler (){ //handler bc attached to event listener
@@ -74,14 +95,14 @@ function increasePlayerHealth(healValue) {
 
 function healPlayerHandler (){
     let maxHeal;
-    if(currentPlayerhealth >= maxLife - HEAL_VALUE){
+    if(currentPlayerHealth >= maxLife - HEAL_VALUE){
         alert("You can't heal more than max initial health")
-        maxHeal = maxLife - currentPlayerhealth;
+        maxHeal = maxLife - currentPlayerHealth;
     } else {
         maxHeal = HEAL_VALUE;
     }
-    increasePlayerHealth(HEAL_VALUE);
-    currentPlayerhealth += HEAL_VALUE;
+    increasePlayerHealth(maxHeal);
+    currentPlayerHealth += maxHeal;
     endRound();
 }
 function resetGame(value) {
