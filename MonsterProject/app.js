@@ -13,6 +13,7 @@ const ATTACK_VALUE = 10; // uppercase bc const global value
 const MONSTER_ATTACK_VALUE = 14;
 const STRONG_ATTACK_VALUE = 17;
 const HEAL_VALUE = 20;
+
 // User input max life
 let enteredMaxLife = prompt('Enter max life value');
 let maxLife = enteredMaxLife;
@@ -24,7 +25,46 @@ if (isNaN(enteredMaxLife) || enteredMaxLife <= 0){
 let currentMonsterHealth = maxLife;
 let currentPlayerHealth = maxLife;
 let hasBonusLife = true ;
+const logEventPlayerAttack = 'Player Attack';
+const logEventPlayerStrongAttack = 'Strong Player Attack';
+const logEventMonsterAttack = 'Monster Attack';
+const logEventHeal = 'Heal';
+const logEventGameOver = 'Game Over';
+let battleLog = [];
 
+adjustHealthBars(maxLife);
+
+function writeToLog (ev, val) {
+    let logEntry;
+    if (ev === logEventPlayerAttack) {
+        logEntry = {
+            event: ev,
+            value: val
+        };
+    } else if (ev === logEventPlayerStrongAttack){
+        logEntry = {
+            event: ev,
+            value: val
+        }
+    } else if (ev === logEventMonsterAttack){
+        logEntry = {
+            event: ev,
+            value: val
+        }
+    } else if (ev === logEventHeal){
+        logEntry = {
+            event: ev,
+            value: val
+        }
+    } else if (ev === logEventGameOver){
+        logEntry = {
+            event: ev,
+            value: val
+        }
+    }
+    battleLog.push(logEntry);
+
+}
 
 function adjustHealthBars(maxLife) {
     monsterHealthBar.max = maxLife;
@@ -38,7 +78,6 @@ function dealMonsterDamage (damage){
     return dealtMonsterDamage;
 }
 
-adjustHealthBars(maxLife);
 
 function endRound (){
     const initialPlayerHealth = currentPlayerHealth;
@@ -72,15 +111,19 @@ function attackMonster(attackType) {
     const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
     currentMonsterHealth -= damage;
     currentPlayerHealth -= playerDamage;
+    writeToLog(logEventMonsterAttack, MONSTER_ATTACK_VALUE);
    endRound();
 }
 
 function strongAttachHandler (){
     attackMonster('STRONG_ATTACK')
+    writeToLog(logEventPlayerStrongAttack, STRONG_ATTACK_VALUE);
+
 }
 
 function attackHandler (){ //handler bc attached to event listener
   attackMonster('ATTACK');
+  writeToLog(logEventPlayerAttack, ATTACK_VALUE);
 }
 
 function dealPlayerDamage(damage) {
@@ -103,6 +146,7 @@ function healPlayerHandler (){
     }
     increasePlayerHealth(maxHeal);
     currentPlayerHealth += maxHeal;
+    writeToLog(logEventHeal, HEAL_VALUE);
     endRound();
 }
 function resetGame(value) {
@@ -114,6 +158,10 @@ function removeBonusLife() {
     bonusLifeEl.parentNode.removeChild(bonusLifeEl);
 }
 
+function printLogHandler (){
+    console.log(battleLog);
+}
+
 function setPlayerHealth(health) {
     playerHealthBar.value = health;
 }
@@ -121,3 +169,4 @@ function setPlayerHealth(health) {
 attackBtn.addEventListener('click', attackHandler);
 strongAttackBtn.addEventListener('click', strongAttachHandler);
 healBtn.addEventListener('click', healPlayerHandler);
+logBtn.addEventListener('click', printLogHandler);
