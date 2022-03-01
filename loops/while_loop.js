@@ -19,8 +19,10 @@
 // 16384
 // 32768
 // 65536
+
+
 let i = 1;
-while(i <= 65536){
-    console.log(i * 2);
-    i += i;
+while( i < 65536){
+    console.log(i*2);
+    i = i + i;
 }
